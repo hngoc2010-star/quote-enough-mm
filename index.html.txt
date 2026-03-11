@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Plywood Quote</title>
+
+<style>
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:Arial;
+background:#f2f2f2;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.app{
+
+width:94%;
+max-width:420px;
+height:90vh;
+
+background:white;
+
+padding:10px;
+
+border-radius:10px;
+
+}
+
+h2{
+text-align:center;
+font-size:16px;
+margin:4px 0 6px 0;
+}
+
+label{
+font-size:11px;
+}
+
+input{
+
+width:100%;
+
+height:24px;
+
+margin:2px 0;
+
+font-size:12px;
+
+padding:2px 4px;
+
+}
+
+button{
+
+width:100%;
+
+height:28px;
+
+margin-top:4px;
+
+background:#007aff;
+
+color:white;
+
+border:none;
+
+border-radius:5px;
+
+font-size:12px;
+
+}
+
+.result{
+
+margin-top:6px;
+
+font-size:12px;
+
+line-height:1.25;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<h2>Plywood Quote</h2>
+
+<label>Thickness (mm)</label>
+<input id="t" type="number">
+
+<label>Bundles</label>
+<input id="b" type="number">
+
+<label>PCS / Bundle</label>
+<input id="p" type="number">
+
+<label>EXW / PCS</label>
+<input id="exw" type="number">
+
+<label>Logistic</label>
+<input id="log" type="number">
+
+<label>USD Rate</label>
+<input id="usd" type="number">
+
+<label>CFR Price / CBM</label>
+<input id="cfr" type="number">
+
+<button onclick="calc()">CALCULATE</button>
+
+<div class="result" id="out"></div>
+
+</div>
+
+<script>
+
+function format(n){
+return n.toLocaleString("en-US")
+}
+
+function calc(){
+
+let t=parseFloat(document.getElementById("t").value)
+let b=parseFloat(document.getElementById("b").value)
+let p=parseFloat(document.getElementById("p").value)
+let exw=parseFloat(document.getElementById("exw").value)
+let log=parseFloat(document.getElementById("log").value)
+let usd=parseFloat(document.getElementById("usd").value)
+let cfr=parseFloat(document.getElementById("cfr").value)
+
+if(!t||!b||!p||!exw||!log||!usd||!cfr){
+
+alert("Fill all fields")
+
+return
+
+}
+
+let width=1220
+let length=2440
+
+let totalPCS=b*p
+
+let cbmPerPCS=(t*width*length)/1000000000
+
+let cbmCont=cbmPerPCS*totalPCS
+
+let exwCost=exw*totalPCS
+
+let totalCFRcost=exwCost+log
+
+let sellingAmount=Math.round(cbmCont*cfr*usd)
+
+let profit=Math.round(sellingAmount-totalCFRcost)
+
+let color=profit<0?"red":"black"
+
+document.getElementById("out").innerHTML=
+
+"TOTAL PCS: "+format(totalPCS)+"<br>"+
+
+"CBM / CONT.: "+cbmCont.toFixed(2)+"<br>"+
+
+"TOTAL CFR COST: "+format(Math.round(totalCFRcost))+"<br>"+
+
+"SELLING AMOUNT: "+format(sellingAmount)+"<br>"+
+
+"<b style='color:"+color+"'>PROFITS: "+format(profit)+"</b>"
+
+}
+
+</script>
+
+</body>
+</html>
