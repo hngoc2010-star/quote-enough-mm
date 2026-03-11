@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Plywood Quote</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:12px;
+font-size:14px;
+}
+
+h2{
+text-align:center;
+}
+
+label{
+font-size:13px;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:4px 0;
+font-size:13px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#007aff;
+color:white;
+border:none;
+border-radius:6px;
+font-size:14px;
+margin-top:6px;
+}
+
+.result{
+background:white;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+line-height:1.7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Plywood Quote</h2>
+
+<label>Thickness (mm)</label>
+<input id="thickness" type="number">
+
+<label>Bundles</label>
+<input id="bundles" type="number">
+
+<label>PCS / Bundle</label>
+<input id="pcs" type="number">
+
+<label>EXW / PCS</label>
+<input id="exw" type="number">
+
+<label>CFR / CBM</label>
+<input id="cfr" type="number">
+
+<label>Logistic</label>
+<input id="logistic" type="number">
+
+<label>USD Rate</label>
+<input id="usd" type="number">
+
+<button onclick="calc()">CALCULATE</button>
+
+<div class="result" id="result"></div>
+
+<script>
+
+function format(x){
+return x.toLocaleString("en-US")
+}
+
+function calc(){
+
+let thickness = parseFloat(document.getElementById("thickness").value)
+let bundles = parseFloat(document.getElementById("bundles").value)
+let pcs = parseFloat(document.getElementById("pcs").value)
+let exw = parseFloat(document.getElementById("exw").value)
+let cfr = parseFloat(document.getElementById("cfr").value)
+let logistic = parseFloat(document.getElementById("logistic").value)
+let usd = parseFloat(document.getElementById("usd").value)
+
+if(isNaN(thickness)||isNaN(bundles)||isNaN(pcs)||isNaN(exw)||isNaN(cfr)||isNaN(logistic)||isNaN(usd)){
+alert("Please fill all fields")
+return
+}
+
+let width = 1220
+let length = 2440
+
+let totalPCS = bundles * pcs
+
+let cbmPerPCS = (thickness * width * length) / 1000000000
+
+let cbmSelling = cbmPerPCS * totalPCS
+
+let totalEXW = exw * totalPCS
+
+let totalCFR = totalEXW + logistic
+
+let sellingAmount = Math.round(cbmSelling * cfr * usd)
+
+let profit = Math.round(sellingAmount - totalCFR)
+
+let color = profit < 0 ? "red" : "black"
+
+document.getElementById("result").innerHTML =
+
+"TOTAL PCS: " + format(totalPCS) + "<br><br>" +
+
+"CBM CONT. SELLING: " + cbmSelling.toFixed(2) + "<br><br>" +
+
+"TOTAL CFR COST: " + format(Math.round(totalCFR)) + "<br><br>" +
+
+"SELLING AMOUNT: " + format(sellingAmount) + "<br><br>" +
+
+"<b style='color:"+color+"'>PROFITS: " + format(profit) + "</b>"
+
+}
+
+</script>
+
+</body>
+
+</html>
